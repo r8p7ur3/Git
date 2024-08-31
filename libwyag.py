@@ -74,3 +74,29 @@ def repo_path(repo, *path):
     #compute path under repos gitdir (* on path makes function variadic)
     return os.path.join(repo.gitdir, *path)
 
+def repo_file(repo, *path, mkdir=False):
+    # same thing as repo_path but creates dirname(*path) if absent
+    # eg, repo_file(r, \"dog\",\"cat\",\"mouse\")
+    #will make .git\dog\cat\mouse
+
+    if repo_dir(repo, *path[:-1], mkdir=mkdir):
+        return repo_path(repo, *path)
+    
+def repo_dir(repo, *path, mkdir = False):
+    #also same as repo_path, but mkdir
+
+    path = repo_path(repo, *path)
+
+    if os.path.exists(path):
+        if (os.path.isdir(path)):
+            return path
+        else:
+            raise Exception("Are you retarded? Not a fucking directory %s" % path)
+        
+    if mkdir:
+        os.makedirs(path)
+        return path
+    else:
+        return None
+    
+
