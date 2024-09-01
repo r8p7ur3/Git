@@ -14,9 +14,10 @@ import zlib
 argparser = argparse.ArgumentParser(description="Content tracker")
 
 # for subparsers
-argsp = argsubparsers.add_parser("init", help="creates a mini black hole that instantly decays and blasts open a repository")
+
 argsubparsers = argparser.add_subparsers (title="Commands", dest="command")
 argsubparsers.required = True
+argsp = argsubparsers.add_parser("init", help="creates a mini black hole that instantly decays and blasts open a repository")
 
 # each subpraser will be returned as a string in their respective fields
 def main(argv=sys.argv[1:]):
@@ -148,8 +149,8 @@ def repo_default_config():
 
 argsp.add.argument("path",
                    metavar="directory",
-                   nargs="?"
-                   default="."
+                   nargs="?",
+                   default=".",
                    help="Where do you want to open the black hole")
 
 
