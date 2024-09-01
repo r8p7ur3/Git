@@ -14,6 +14,7 @@ import zlib
 argparser = argparse.ArgumentParser(description="Content tracker")
 
 # for subparsers
+argsp = argsubparsers.add_parser("init", help="creates a mini black hole that instantly decays and blasts open a repository")
 argsubparsers = argparser.add_subparsers (title="Commands", dest="command")
 argsubparsers.required = True
 
@@ -99,4 +100,62 @@ def repo_dir(repo, *path, mkdir = False):
     else:
         return None
     
+#to make new repo at path
+def repo_create(path):
+    repo =GitRepository(path, True)
+
+#making sure if path does not exists or goes to empty dir
+
+    if os.path.exists(repo.worktree):
+        if not os.path.isdir(repo.worktree):
+             raise Exception("%s Isn't a FUCKING directory DUMBASS" % path)
+        if os.path.exists(repo.gitdir) and os.listdir(repo.gitdir):
+             raise Exception("%s is not empty!" % path)
+    else:
+        os.makedirs(repo.worktree)
+
+    assert repo_dir(repo, "branches", mkdir=True)
+    assert repo_dir(repo, "objects", mkdir=True)
+    assert repo_dir(repo, "refs", "tags", mkdir=True)
+    assert repo_dir(repo, "refs","heads", mkdir=True)
+
+    #.git/description
+    with open(repo_file(repo, "description"),"w") as f:
+         f.write("repository is an orphan, it has no parents. edit this file 'description' if you want to be it's baby daddy.\n")
+
+    #.git/HEAD
+    with open(repo_file(repo, "HEAD"), "w") as f:
+        f.write("ref: refs/heads/master\n")
+
+    with open(repo_file(repo, "config"), "w") as f:
+        config = repo_default_config()
+        config.write(f)
+
+    return repo
+
+#is repositoryformatversion is >1, git WILL have a mental breakdown. wyag will only take 0
+
+def repo_default_config():
+    ret = configparser.ConfigParser()
+
+    ret.add_section("core")
+    ret.set("core", "repositoryformatversion", "0")
+    ret.set("core", "filemode", "false")
+    ret.set("core", "bare", "false")
+
+    return ret
+
+
+argsp.add.argument("path",
+                   metavar="directory",
+                   nargs="?"
+                   default="."
+                   help="Where do you want to open the black hole")
+
+
+#bridge function to read arguments values from object returned
+#by argparse, then call function with right values
+
+def cmd_init(args):
+    repo_create(args.path)
 
