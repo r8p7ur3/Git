@@ -13,11 +13,6 @@ import zlib
 
 
 
-# for subparsers
-
-argsubparsers = argparser.add_subparsers (title="Commands", dest="command")
-argsubparsers.required = True
-argsp = argsubparsers.add_parser("init", help="creates a mini black hole that instantly decays and blasts open a repository")
 
 # each subpraser will be returned as a string in their respective fields
 def main(argv=sys.argv[1:]):
@@ -39,6 +34,12 @@ def main(argv=sys.argv[1:]):
         case "status"       : cmd_status(args)
         case "tag"          : cmd_tag(args)
         case _              : print("You didn't give a command dumbass.")
+
+# for subparsers
+
+argsubparsers = argparse.add_subparsers (title="Commands", dest="command")
+argsubparsers.required = True
+argsp = argsubparsers.add_parser("init", help="creates a mini black hole that instantly decays and blasts open a repository")
 
 argparser = argparse.ArgumentParser(description="Content tracker")
 
