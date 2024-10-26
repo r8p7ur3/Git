@@ -1,4 +1,4 @@
-import argparse # most familiar with this library
+import argparse 
 import collections
 import configparser
 from datetime import datetime
@@ -11,7 +11,7 @@ import re
 import sys
 import zlib
 
-argparser = argparse.ArgumentParser(description="Content tracker")
+
 
 # for subparsers
 
@@ -39,6 +39,8 @@ def main(argv=sys.argv[1:]):
         case "status"       : cmd_status(args)
         case "tag"          : cmd_tag(args)
         case _              : print("You didn't give a command dumbass.")
+
+argparser = argparse.ArgumentParser(description="Content tracker")
 
 
 
@@ -159,4 +161,6 @@ argsp.add.argument("path",
 
 def cmd_init(args):
     repo_create(args.path)
+
+
 
